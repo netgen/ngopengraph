@@ -1,0 +1,17 @@
+Steps needed to install Netgen Open Graph extension:
+
+1. Download and unpack the zip archive to extension directory of your eZ Publish installation and activate the extension
+2. Regenerate the autoload array
+3. Edit your templates to include available template files from ngopengraph/design/standard/templates/parts:
+	opengraph.tpl - edit your pagelayout.tpl and include the following lines between <head> and </head> tags:
+		{if is_set($module_result.node_id)}
+			{include uri="design:parts/opengraph.tpl" node_id=$module_result.node_id}
+		{/if}
+	facebook_like.tpl - edit one of your view templates and include the following lines:
+		{include uri='design:parts/facebook_like.tpl' node=$node}
+		
+		Be careful not to include this template in classes who don't have any Open Graph meta data.
+4. Edit your pagelayout.tpl to include additional xml namespaces specific to Open Graph to your <html> tag.
+	xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml"
+5. Edit ngopengraph.ini file to configure the extension. Detailed instructions are within the ini file.
+6. Clean INI and override caches
