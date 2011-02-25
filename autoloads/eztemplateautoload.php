@@ -4,6 +4,6 @@
 	$eZTemplateOperatorArray[] = array(
 		'script' => 'extension/ngopengraph/autoloads/opengraphoperator.php',
 		'class' => 'OpenGraphOperator',
-		'operator_names' => array( 'opengraph' )
+		'operator_names' => array( 'opengraph', 'language_code' )
 	);
 ?>

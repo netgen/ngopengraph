@@ -1,30 +1,31 @@
 <?php
- 
+
 class OpenGraphOperator
 {
     function OpenGraphOperator()
     {
-        $this->Operators = array( 'opengraph' );
+        $this->Operators = array( 'opengraph', 'language_code' );
     }
- 
+
     function &operatorList()
     {
         return $this->Operators;
     }
- 
+
     function namedParameterPerOperator()
     {
         return true;
     }
- 
+
     function namedParameterList()
     {
        return array( 'opengraph' => array( 'nodeid' => array( 'type' => 'integer',
                                                                 'required' => true,
-                                                                'default' => 0 ) )
-	   );
+                                                                'default' => 0 ) ),
+					'language_code' => array()
+	   	);
     }
- 
+
     function modify( &$tpl, &$operatorName, &$operatorParameters, &$rootNamespace,
                      &$currentNamespace, &$operatorValue, &$namedParameters )
     {
@@ -32,8 +33,14 @@ class OpenGraphOperator
        {
 			case 'opengraph':
 			{
-			   $operatorValue = $this->generateOpenGraphTags( $namedParameters['nodeid'] );
-			} break;
+				$operatorValue = $this->generateOpenGraphTags( $namedParameters['nodeid'] );
+				break;
+			}
+			case 'language_code':
+			{
+				$operatorValue = eZLocale::instance()->httpLocaleCode();
+				break;
+			}
        }
     }
 
@@ -62,7 +69,7 @@ class OpenGraphOperator
 		$returnArray = $this->processGenericData($contentNode, $ogIni, $facebookCompatible, $returnArray);
 
 		$returnArray = $this->processObject($contentObject, $ogIni, $returnArray);
-		
+
 		if($this->checkRequirements($returnArray, $facebookCompatible))
 			return $returnArray;
 		else
@@ -77,7 +84,7 @@ class OpenGraphOperator
 
 		$siteUrl = $ogIni->variable( 'GenericData', 'site_url' );
 		if(strlen(trim($siteUrl)) > 0)
-			if(ereg('/$', $siteUrl))
+			if(preg_match('/\/$/', $siteUrl) > 0)
 				$returnArray['og:url'] = $siteUrl . $contentNode->urlAlias();
 			else
 				$returnArray['og:url'] = $siteUrl . '/' . $contentNode->urlAlias();
@@ -87,14 +94,14 @@ class OpenGraphOperator
 			$appID = $ogIni->variable( 'GenericData', 'app_id' );
 			if(strlen(trim($appID)) > 0)
 				$returnArray['fb:app_id'] = trim($appID);
-	
+
 			$defaultAdmin = $ogIni->variable( 'GenericData', 'default_admin' );
 			if(strlen(trim($defaultAdmin)) > 0)
 			{
 				$data = trim($defaultAdmin);
-				
+
 				$admins = $ogIni->variable( 'GenericData', 'admins' );
-				
+
 				if(count($admins) > 0)
 				{
 					$admins = trim(implode(',', $admins));
@@ -103,7 +110,7 @@ class OpenGraphOperator
 			}
 			$returnArray['fb:admins'] = $data;
 		}
-		
+
 		return $returnArray;
 	}
 
@@ -128,22 +135,22 @@ class OpenGraphOperator
 			if($contentObjectAttribute instanceof eZContentObjectAttribute)
 			{
 				$openGraphHandler = ngOpenGraphBase::getInstance($contentObjectAttribute);
-				
+
 				if(count($value) == 1)
 					$data = $openGraphHandler->getData();
 				else if(count($value) == 2)
 					$data = $openGraphHandler->getDataMember($value[1]);
 				else
 					$data = "";
-				
+
 				if(strlen($data) > 0)
 					$returnArray[$key] = $data;
 			}
 		}
-		
+
 		return $returnArray;
 	}
-	
+
 	function checkRequirements($returnArray, $facebookCompatible)
 	{
 		$arrayKeys = array_keys($returnArray);
@@ -153,7 +160,7 @@ class OpenGraphOperator
 		{
 			return false;
 		}
-		
+
 		if($facebookCompatible == 'true')
 		{
 			if (!in_array('og:site_name', $arrayKeys) || (!in_array('fb:app_id', $arrayKeys) && !in_array('fb:admins', $arrayKeys)))
@@ -161,9 +168,9 @@ class OpenGraphOperator
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 }
- 
+
 ?>
