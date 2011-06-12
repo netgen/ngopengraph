@@ -12,12 +12,10 @@ class ngOpenGraphImage extends ngOpenGraphBase
 		$imageAliasHandler = $this->ContentObjectAttribute->attribute( 'content' );
 		$imageAlias = $imageAliasHandler->imageAlias('opengraph');
 
-		if($imageAlias['is_valid'] == 1)
+		if(!$imageAlias['is_valid'] == 1)
 			return 'http://' . $_SERVER['HTTP_HOST'] . '/' . $imageAlias['full_path'];
-		
-		require_once( 'kernel/common/template.php' );
-		$tpl = templateInit();
-		return 'http://' . eZSys::hostname() . ezUrlOperator::eZImage($tpl, 'opengraph_default_image.png', '');
+
+		return 'http://' . eZSys::hostname() . ezUrlOperator::eZImage(null, 'opengraph_default_image.png', '');
 	}
 }
 

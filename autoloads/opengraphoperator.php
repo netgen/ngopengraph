@@ -82,12 +82,9 @@ class OpenGraphOperator
 		if(strlen(trim($siteName)) > 0)
 			$returnArray['og:site_name'] = trim($siteName);
 
-		$siteUrl = $ogIni->variable( 'GenericData', 'site_url' );
-		if(strlen(trim($siteUrl)) > 0)
-			if(preg_match('/\/$/', $siteUrl) > 0)
-				$returnArray['og:url'] = $siteUrl . $contentNode->urlAlias();
-			else
-				$returnArray['og:url'] = $siteUrl . '/' . $contentNode->urlAlias();
+		$urlAlias = $contentNode->urlAlias();
+		eZURI::transformURI($urlAlias, false, 'full');
+		$returnArray['og:url'] = $urlAlias;
 
 		if($facebookCompatible == 'true')
 		{
@@ -96,6 +93,7 @@ class OpenGraphOperator
 				$returnArray['fb:app_id'] = trim($appID);
 
 			$defaultAdmin = $ogIni->variable( 'GenericData', 'default_admin' );
+			$data = '';
 			if(strlen(trim($defaultAdmin)) > 0)
 			{
 				$data = trim($defaultAdmin);
@@ -108,7 +106,9 @@ class OpenGraphOperator
 					$data = $data . ',' . $admins;
 				}
 			}
-			$returnArray['fb:admins'] = $data;
+
+			if(strlen($data) > 0)
+				$returnArray['fb:admins'] = $data;
 		}
 
 		return $returnArray;
