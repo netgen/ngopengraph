@@ -78,7 +78,7 @@ class OpenGraphOperator
 
 	function processGenericData($contentNode, $ogIni, $facebookCompatible, $returnArray)
 	{
-		$siteName = $ogIni->variable( 'GenericData', 'site_name' );
+		$siteName = eZINI::instance()->variable( 'SiteSettings', 'SiteName' );
 		if(strlen(trim($siteName)) > 0)
 			$returnArray['og:site_name'] = trim($siteName);
 
