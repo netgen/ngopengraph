@@ -29,7 +29,7 @@ class ngOpenGraphInfo
     static function info()
     {
         return array( 'Name'      => '<a href="http://projects.ez.no/ngopengraph">Netgen Open Graph</a> extension',
-                      'Version'   => '1.1',
+                      'Version'   => '1.2',
                       'Copyright' => 'Copyright (C) 2011 Netgen d.o.o. Croatia',
                       'License'   => 'GNU General Public License v2.0',
                     );
