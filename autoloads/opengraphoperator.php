@@ -129,6 +129,9 @@ class OpenGraphOperator
 		foreach($attributeValues as $key => $value)
 		{
 			$contentObjectAttributeArray = $contentObject->fetchAttributesByIdentifier(array($value[0]));
+			if( is_array( $contentObjectAttributeArray ) === false ) {
+				continue;
+			}
 			$contentObjectAttributeArray = array_values($contentObjectAttributeArray);
 			$contentObjectAttribute = $contentObjectAttributeArray[0];
 
@@ -143,7 +146,7 @@ class OpenGraphOperator
 				else
 					$data = "";
 
-				if(strlen($data) > 0)
+				if(is_array( $data ) || strlen($data) > 0)
 					$returnArray[$key] = $data;
 			}
 		}
