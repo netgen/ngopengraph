@@ -73,7 +73,10 @@ class OpenGraphOperator
 		if($this->checkRequirements($returnArray, $facebookCompatible))
 			return $returnArray;
 		else
+		{
+			eZDebug::writeDebug( 'No','Facebook Compatible?' );
 			return array();
+		}
 	}
 
 	function processGenericData($contentNode, $ogIni, $facebookCompatible, $returnArray)
@@ -116,41 +119,55 @@ class OpenGraphOperator
 
 	function processObject($contentObject, $ogIni, $returnArray)
 	{
-		$literalValues = $ogIni->variable( $contentObject->contentClassIdentifier(), 'LiteralMap' );
-
-		foreach($literalValues as $key => $value)
+		if ( $ogIni->hasVariable( $contentObject->contentClassIdentifier(), 'LiteralMap' ) )
 		{
-			if(strlen($value) > 0)
-				$returnArray[$key] = $value;
-		}
-
-		$attributeValues = $ogIni->variableArray( $contentObject->contentClassIdentifier(), 'AttributeMap' );
-
-		foreach($attributeValues as $key => $value)
-		{
-			$contentObjectAttributeArray = $contentObject->fetchAttributesByIdentifier(array($value[0]));
-			if( is_array( $contentObjectAttributeArray ) === false ) {
-				continue;
-			}
-			$contentObjectAttributeArray = array_values($contentObjectAttributeArray);
-			$contentObjectAttribute = $contentObjectAttributeArray[0];
-
-			if($contentObjectAttribute instanceof eZContentObjectAttribute)
+			$literalValues = $ogIni->variable( $contentObject->contentClassIdentifier(), 'LiteralMap' );
+			eZDebug::writeDebug($literalValues, 'LiteralMap');
+		
+			if ( $literalValues )
 			{
-				$openGraphHandler = ngOpenGraphBase::getInstance($contentObjectAttribute);
-
-				if(count($value) == 1)
-					$data = $openGraphHandler->getData();
-				else if(count($value) == 2)
-					$data = $openGraphHandler->getDataMember($value[1]);
-				else
-					$data = "";
-
-				if(is_array( $data ) || strlen($data) > 0)
-					$returnArray[$key] = $data;
+				foreach($literalValues as $key => $value)
+				{
+					if(strlen($value) > 0)
+						$returnArray[$key] = $value;
+				}
 			}
 		}
 
+		if ( $ogIni->hasVariable( $contentObject->contentClassIdentifier(), 'AttributeMap' ) )
+		{
+			$attributeValues = $ogIni->variableArray( $contentObject->contentClassIdentifier(), 'AttributeMap' );
+			eZDebug::writeDebug($attributeValues, 'AttributeMap');
+			
+			if ( $attributeValues )
+			{
+				foreach($attributeValues as $key => $value)
+				{
+					$contentObjectAttributeArray = $contentObject->fetchAttributesByIdentifier(array($value[0]));
+					if( is_array( $contentObjectAttributeArray ) === false ) {
+						continue;
+					}
+					$contentObjectAttributeArray = array_values($contentObjectAttributeArray);
+					$contentObjectAttribute = $contentObjectAttributeArray[0];
+		
+					if($contentObjectAttribute instanceof eZContentObjectAttribute)
+					{
+						$openGraphHandler = ngOpenGraphBase::getInstance($contentObjectAttribute);
+		
+						if(count($value) == 1)
+							$data = $openGraphHandler->getData();
+						else if(count($value) == 2)
+							$data = $openGraphHandler->getDataMember($value[1]);
+						else
+							$data = "";
+		
+						if(is_array( $data ) || strlen($data) > 0)
+							$returnArray[$key] = $data;
+					}
+				}
+			}
+		}
+				
 		return $returnArray;
 	}
 
@@ -161,6 +178,7 @@ class OpenGraphOperator
 		if(!in_array('og:title', $arrayKeys) || !in_array('og:type', $arrayKeys) ||
 			!in_array('og:image', $arrayKeys) || !in_array('og:url', $arrayKeys))
 		{
+			eZDebug::writeError($arrayKeys, 'Missing an OG required field: title, image, type, or url');
 			return false;
 		}
 
@@ -168,6 +186,7 @@ class OpenGraphOperator
 		{
 			if (!in_array('og:site_name', $arrayKeys) || (!in_array('fb:app_id', $arrayKeys) && !in_array('fb:admins', $arrayKeys)))
 			{
+				eZDebug::writeError($arrayKeys, 'Missing a FB required field (in ngopengraph.ini): app_id, DefaultAdmin, or Sitename (site.ini)');
 				return false;
 			}
 		}
