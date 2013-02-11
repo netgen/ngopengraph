@@ -60,11 +60,18 @@ class OpenGraphOperator
         $this->debug = $this->ogIni->variable( 'General', 'Debug' ) == 'enabled';
 
         $availableClasses = $this->ogIni->variable( 'General', 'Classes' );
-        $contentNode = eZContentObjectTreeNode::fetch( $nodeID );
 
-        if ( !$contentNode instanceof eZContentObjectTreeNode )
+        if ( $nodeID instanceof eZContentObjectTreeNode )
         {
-            return array();
+            $contentNode = $nodeID;
+        }
+        else
+        {
+            $contentNode = eZContentObjectTreeNode::fetch( $nodeID );
+            if ( !$contentNode instanceof eZContentObjectTreeNode )
+            {
+                return array();
+            }
         }
 
         $contentObject = $contentNode->object();
