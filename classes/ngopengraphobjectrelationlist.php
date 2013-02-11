@@ -46,7 +46,7 @@ class ngOpenGraphObjectRelationList extends ngOpenGraphBase
                         $imageAlias = $imageAliasHandler->imageAlias( 'opengraph' );
                         if( $imageAlias['is_valid'] == 1 )
                         {
-                            $images[] = 'http://' . $_SERVER['HTTP_HOST'] . '/' . $imageAlias['full_path'];
+                            $images[] = eZSys::serverURL() . '/' . $imageAlias['full_path'];
                         }
                     }
                 }

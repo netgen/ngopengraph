@@ -14,9 +14,9 @@ class ngOpenGraphImage extends ngOpenGraphBase
 
         if ( $imageAlias['is_valid'] == 1 )
         {
-            return 'http://' . $_SERVER['HTTP_HOST'] . '/' . $imageAlias['full_path'];
+            return eZSys::serverURL() . '/' . $imageAlias['full_path'];
         }
 
-        return 'http://' . eZSys::hostname() . eZURLOperator::eZImage( null, 'opengraph_default_image.png', '' );
+        return eZSys::serverURL() . eZURLOperator::eZImage( null, 'opengraph_default_image.png', '' );
     }
 }
