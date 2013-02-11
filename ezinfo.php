@@ -2,8 +2,8 @@
 //
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: Netgen Open Graph extension for eZ Publish
-// SOFTWARE RELEASE: 1.1
-// COPYRIGHT NOTICE: Copyright (C) 2011 Netgen d.o.o. Croatia
+// SOFTWARE RELEASE: 1.3
+// COPYRIGHT NOTICE: Copyright (C) 2013 Netgen d.o.o. Croatia
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
 //   This program is free software; you can redistribute it and/or
@@ -29,8 +29,8 @@ class ngOpenGraphInfo
     static function info()
     {
         return array( 'Name'      => '<a href="http://projects.ez.no/ngopengraph">Netgen Open Graph</a> extension',
-                      'Version'   => '1.2',
-                      'Copyright' => 'Copyright (C) 2011 Netgen d.o.o. Croatia',
+                      'Version'   => '1.3',
+                      'Copyright' => 'Copyright (C) 2013 Netgen d.o.o. Croatia',
                       'License'   => 'GNU General Public License v2.0',
                     );
     }
