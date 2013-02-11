@@ -2,6 +2,8 @@
 
 class OpenGraphOperator
 {
+    private $debug = false;
+
     function OpenGraphOperator()
     {
         $this->Operators = array( 'opengraph', 'language_code' );
@@ -56,6 +58,7 @@ class OpenGraphOperator
         $ogIni = eZINI::instance( 'ngopengraph.ini' );
         $facebookCompatible = $ogIni->variable( 'General', 'FacebookCompatible' );
         $availableClasses = $ogIni->variable( 'General', 'Classes' );
+        $this->debug = $ogIni->variable( 'General', 'Debug' ) == 'enabled';
 
         $contentNode = eZContentObjectTreeNode::fetch( $nodeID );
 
@@ -81,7 +84,11 @@ class OpenGraphOperator
         }
         else
         {
-            eZDebug::writeDebug( 'No', 'Facebook Compatible?' );
+            if ( $this->debug )
+            {
+                eZDebug::writeDebug( 'No', 'Facebook Compatible?' );
+            }
+
             return array();
         }
     }
@@ -135,7 +142,10 @@ class OpenGraphOperator
         if ( $ogIni->hasVariable( $contentObject->contentClassIdentifier(), 'LiteralMap' ) )
         {
             $literalValues = $ogIni->variable( $contentObject->contentClassIdentifier(), 'LiteralMap' );
-            eZDebug::writeDebug( $literalValues, 'LiteralMap' );
+            if ( $this->debug )
+            {
+                eZDebug::writeDebug( $literalValues, 'LiteralMap' );
+            }
 
             if ( $literalValues )
             {
@@ -152,7 +162,10 @@ class OpenGraphOperator
         if ( $ogIni->hasVariable( $contentObject->contentClassIdentifier(), 'AttributeMap' ) )
         {
             $attributeValues = $ogIni->variableArray( $contentObject->contentClassIdentifier(), 'AttributeMap' );
-            eZDebug::writeDebug( $attributeValues, 'AttributeMap' );
+            if ( $this->debug )
+            {
+                eZDebug::writeDebug( $attributeValues, 'AttributeMap' );
+            }
 
             if ( $attributeValues )
             {
@@ -203,7 +216,11 @@ class OpenGraphOperator
         if ( !in_array( 'og:title', $arrayKeys ) || !in_array( 'og:type', $arrayKeys ) ||
             !in_array( 'og:image', $arrayKeys ) || !in_array( 'og:url', $arrayKeys ) )
         {
-            eZDebug::writeError( $arrayKeys, 'Missing an OG required field: title, image, type, or url' );
+            if ( $this->debug )
+            {
+                eZDebug::writeError( $arrayKeys, 'Missing an OG required field: title, image, type, or url' );
+            }
+
             return false;
         }
 
@@ -211,7 +228,11 @@ class OpenGraphOperator
         {
             if ( !in_array( 'og:site_name', $arrayKeys ) || ( !in_array( 'fb:app_id', $arrayKeys ) && !in_array( 'fb:admins', $arrayKeys ) ) )
             {
-                eZDebug::writeError( $arrayKeys, 'Missing a FB required field (in ngopengraph.ini): app_id, DefaultAdmin, or Sitename (site.ini)' );
+                if ( $this->debug )
+                {
+                    eZDebug::writeError( $arrayKeys, 'Missing a FB required field (in ngopengraph.ini): app_id, DefaultAdmin, or Sitename (site.ini)' );
+                }
+
                 return false;
             }
         }
