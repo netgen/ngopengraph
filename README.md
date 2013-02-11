@@ -1,5 +1,4 @@
-Netgen Open Graph extension
-===========================
+# Netgen Open Graph extension
 Netgen Open Graph is an extension for eZ Publish CMS that allows simple
 integration with Open Graph protocol, either official or compatible with Facebook.
 
@@ -10,8 +9,13 @@ corresponding Open Graph representations (nodes) in Facebook Open Graph tree.
 All configuration is done through one ini file (ngopengraph.ini),
 allowing for very simple and painless installation and flexible use.
 
-Installation instructions:
-    see doc/INSTALL
+## License, installation instructions and changelog
+[License](LICENSE)
 
-Version history:
-    see doc/HISTORY
+[Installation instructions](doc/INSTALL.md)
+
+[Version history](doc/HISTORY.md)
+
+## Project page
+
+You can find the project page on [projects.ez.no](http://projects.ez.no/ngopengraph)
