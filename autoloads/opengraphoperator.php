@@ -197,7 +197,7 @@ class OpenGraphOperator
                             $data = "";
                         }
 
-                        if ( is_array( $data ) || !empty( $data ) )
+                        if ( !empty( $data ) )
                         {
                             $returnArray[$key] = $data;
                         }
