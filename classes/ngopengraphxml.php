@@ -9,6 +9,6 @@ class ngOpenGraphXml extends ngOpenGraphBase
 
     public function getData()
     {
-        return str_replace("\n", " ", strip_tags(trim($this->ContentObjectAttribute->attribute('data_text'))));
+        return str_replace( "\n", " ", strip_tags( trim( $this->ContentObjectAttribute->attribute( 'data_text' ) ) ) );
     }
 }

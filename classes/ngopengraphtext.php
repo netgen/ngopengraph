@@ -9,6 +9,6 @@ class ngOpenGraphText extends ngOpenGraphBase
 
     public function getData()
     {
-        return str_replace("\n", " ", trim($this->ContentObjectAttribute->attribute('data_text')));
+        return str_replace( "\n", " ", trim( $this->ContentObjectAttribute->attribute( 'data_text' ) ) );
     }
 }

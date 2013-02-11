@@ -19,10 +19,15 @@ class OpenGraphOperator
 
     function namedParameterList()
     {
-       return array( 'opengraph' => array( 'nodeid' => array( 'type' => 'integer',
-                                                                'required' => true,
-                                                                'default' => 0 ) ),
-                    'language_code' => array()
+        return array(
+            'opengraph' => array(
+                'nodeid' => array(
+                    'type' => 'integer',
+                    'required' => true,
+                    'default' => 0
+                )
+            ),
+            'language_code' => array()
         );
     }
 
@@ -52,84 +57,94 @@ class OpenGraphOperator
         $facebookCompatible = $ogIni->variable( 'General', 'FacebookCompatible' );
         $availableClasses = $ogIni->variable( 'General', 'Classes' );
 
-        $contentNode = eZContentObjectTreeNode::fetch($nodeID);
+        $contentNode = eZContentObjectTreeNode::fetch( $nodeID );
 
-        if(!($contentNode instanceof eZContentObjectTreeNode))
+        if ( !$contentNode instanceof eZContentObjectTreeNode )
         {
             return array();
         }
 
         $contentObject = $contentNode->object();
 
-        if(!($contentObject instanceof eZContentObject) || !in_array($contentObject->contentClassIdentifier(), $availableClasses))
+        if ( !$contentObject instanceof eZContentObject || !in_array( $contentObject->contentClassIdentifier(), $availableClasses ) )
         {
             return array();
         }
 
-        $returnArray = $this->processGenericData($contentNode, $ogIni, $facebookCompatible, $returnArray);
+        $returnArray = $this->processGenericData( $contentNode, $ogIni, $facebookCompatible, $returnArray );
 
-        $returnArray = $this->processObject($contentObject, $ogIni, $returnArray);
+        $returnArray = $this->processObject( $contentObject, $ogIni, $returnArray );
 
-        if($this->checkRequirements($returnArray, $facebookCompatible))
+        if ( $this->checkRequirements( $returnArray, $facebookCompatible ) )
+        {
             return $returnArray;
+        }
         else
         {
-            eZDebug::writeDebug( 'No','Facebook Compatible?' );
+            eZDebug::writeDebug( 'No', 'Facebook Compatible?' );
             return array();
         }
     }
 
-    function processGenericData($contentNode, $ogIni, $facebookCompatible, $returnArray)
+    function processGenericData( $contentNode, $ogIni, $facebookCompatible, $returnArray )
     {
-        $siteName = eZINI::instance()->variable( 'SiteSettings', 'SiteName' );
-        if(strlen(trim($siteName)) > 0)
-            $returnArray['og:site_name'] = trim($siteName);
+        $siteName = trim( eZINI::instance()->variable( 'SiteSettings', 'SiteName' ) );
+        if ( !empty( $siteName ) )
+        {
+            $returnArray['og:site_name'] = $siteName;
+        }
 
         $urlAlias = $contentNode->urlAlias();
-        eZURI::transformURI($urlAlias, false, 'full');
+        eZURI::transformURI( $urlAlias, false, 'full' );
         $returnArray['og:url'] = $urlAlias;
 
-        if($facebookCompatible == 'true')
+        if ( $facebookCompatible == 'true' )
         {
-            $appID = $ogIni->variable( 'GenericData', 'app_id' );
-            if(strlen(trim($appID)) > 0)
-                $returnArray['fb:app_id'] = trim($appID);
-
-            $defaultAdmin = $ogIni->variable( 'GenericData', 'default_admin' );
-            $data = '';
-            if(strlen(trim($defaultAdmin)) > 0)
+            $appID = trim( $ogIni->variable( 'GenericData', 'app_id' ) );
+            if ( !empty( $appID ) )
             {
-                $data = trim($defaultAdmin);
+                $returnArray['fb:app_id'] = $appID;
+            }
+
+            $defaultAdmin = trim( $ogIni->variable( 'GenericData', 'default_admin' ) );
+            $data = '';
+            if ( !empty( $defaultAdmin ) )
+            {
+                $data = $defaultAdmin;
 
                 $admins = $ogIni->variable( 'GenericData', 'admins' );
 
-                if(count($admins) > 0)
+                if ( !empty( $admins ) )
                 {
-                    $admins = trim(implode(',', $admins));
+                    $admins = trim( implode( ',', $admins ) );
                     $data = $data . ',' . $admins;
                 }
             }
 
-            if(strlen($data) > 0)
+            if ( !empty( $data ) )
+            {
                 $returnArray['fb:admins'] = $data;
+            }
         }
 
         return $returnArray;
     }
 
-    function processObject($contentObject, $ogIni, $returnArray)
+    function processObject( $contentObject, $ogIni, $returnArray )
     {
         if ( $ogIni->hasVariable( $contentObject->contentClassIdentifier(), 'LiteralMap' ) )
         {
             $literalValues = $ogIni->variable( $contentObject->contentClassIdentifier(), 'LiteralMap' );
-            eZDebug::writeDebug($literalValues, 'LiteralMap');
+            eZDebug::writeDebug( $literalValues, 'LiteralMap' );
 
             if ( $literalValues )
             {
-                foreach($literalValues as $key => $value)
+                foreach ( $literalValues as $key => $value )
                 {
-                    if(strlen($value) > 0)
+                    if ( !empty( $value ) )
+                    {
                         $returnArray[$key] = $value;
+                    }
                 }
             }
         }
@@ -137,32 +152,42 @@ class OpenGraphOperator
         if ( $ogIni->hasVariable( $contentObject->contentClassIdentifier(), 'AttributeMap' ) )
         {
             $attributeValues = $ogIni->variableArray( $contentObject->contentClassIdentifier(), 'AttributeMap' );
-            eZDebug::writeDebug($attributeValues, 'AttributeMap');
+            eZDebug::writeDebug( $attributeValues, 'AttributeMap' );
 
             if ( $attributeValues )
             {
-                foreach($attributeValues as $key => $value)
+                foreach ( $attributeValues as $key => $value )
                 {
-                    $contentObjectAttributeArray = $contentObject->fetchAttributesByIdentifier(array($value[0]));
-                    if( is_array( $contentObjectAttributeArray ) === false ) {
+                    $contentObjectAttributeArray = $contentObject->fetchAttributesByIdentifier( array( $value[0] ) );
+                    if ( !is_array( $contentObjectAttributeArray ) )
+                    {
                         continue;
                     }
-                    $contentObjectAttributeArray = array_values($contentObjectAttributeArray);
+
+                    $contentObjectAttributeArray = array_values( $contentObjectAttributeArray );
                     $contentObjectAttribute = $contentObjectAttributeArray[0];
 
-                    if($contentObjectAttribute instanceof eZContentObjectAttribute)
+                    if ( $contentObjectAttribute instanceof eZContentObjectAttribute )
                     {
-                        $openGraphHandler = ngOpenGraphBase::getInstance($contentObjectAttribute);
+                        $openGraphHandler = ngOpenGraphBase::getInstance( $contentObjectAttribute );
 
-                        if(count($value) == 1)
+                        if ( count( $value ) == 1 )
+                        {
                             $data = $openGraphHandler->getData();
-                        else if(count($value) == 2)
-                            $data = $openGraphHandler->getDataMember($value[1]);
+                        }
+                        else if ( count( $value ) == 2 )
+                        {
+                            $data = $openGraphHandler->getDataMember( $value[1] );
+                        }
                         else
+                        {
                             $data = "";
+                        }
 
-                        if(is_array( $data ) || strlen($data) > 0)
+                        if ( is_array( $data ) || !empty( $data ) )
+                        {
                             $returnArray[$key] = $data;
+                        }
                     }
                 }
             }
@@ -171,22 +196,22 @@ class OpenGraphOperator
         return $returnArray;
     }
 
-    function checkRequirements($returnArray, $facebookCompatible)
+    function checkRequirements( $returnArray, $facebookCompatible )
     {
-        $arrayKeys = array_keys($returnArray);
+        $arrayKeys = array_keys( $returnArray );
 
-        if(!in_array('og:title', $arrayKeys) || !in_array('og:type', $arrayKeys) ||
-            !in_array('og:image', $arrayKeys) || !in_array('og:url', $arrayKeys))
+        if ( !in_array( 'og:title', $arrayKeys ) || !in_array( 'og:type', $arrayKeys ) ||
+            !in_array( 'og:image', $arrayKeys ) || !in_array( 'og:url', $arrayKeys ) )
         {
-            eZDebug::writeError($arrayKeys, 'Missing an OG required field: title, image, type, or url');
+            eZDebug::writeError( $arrayKeys, 'Missing an OG required field: title, image, type, or url' );
             return false;
         }
 
-        if($facebookCompatible == 'true')
+        if ( $facebookCompatible == 'true' )
         {
-            if (!in_array('og:site_name', $arrayKeys) || (!in_array('fb:app_id', $arrayKeys) && !in_array('fb:admins', $arrayKeys)))
+            if ( !in_array( 'og:site_name', $arrayKeys ) || ( !in_array( 'fb:app_id', $arrayKeys ) && !in_array( 'fb:admins', $arrayKeys ) ) )
             {
-                eZDebug::writeError($arrayKeys, 'Missing a FB required field (in ngopengraph.ini): app_id, DefaultAdmin, or Sitename (site.ini)');
+                eZDebug::writeError( $arrayKeys, 'Missing a FB required field (in ngopengraph.ini): app_id, DefaultAdmin, or Sitename (site.ini)' );
                 return false;
             }
         }

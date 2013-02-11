@@ -25,7 +25,7 @@ class ngOpenGraphBase
 
     public function getData()
     {
-        return trim($this->ContentObjectAttribute->attribute('data_text'));
+        return trim( $this->ContentObjectAttribute->attribute( 'data_text' ) );
     }
 
     public function getDataMember( $dataMember )

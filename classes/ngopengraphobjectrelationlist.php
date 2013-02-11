@@ -9,12 +9,12 @@ class ngOpenGraphObjectRelationList extends ngOpenGraphBase
 
     public function getData()
     {
-        $return    = array();
+        $return = array();
         $relations = $this->ContentObjectAttribute->attribute( 'content' );
-        foreach( $relations['relation_list'] as $relation )
+        foreach ( $relations['relation_list'] as $relation )
         {
             $object = eZContentObject::fetch( $relation['contentobject_id'] );
-            if( $object instanceof eZContentObject )
+            if ( $object instanceof eZContentObject )
             {
                 $return[] = $object->attribute( 'name' );
             }
@@ -27,29 +27,31 @@ class ngOpenGraphObjectRelationList extends ngOpenGraphBase
     {
         if( $dataMember === 'related_images' )
         {
-            $images    = array();
+            $images = array();
             $relations = $this->ContentObjectAttribute->attribute( 'content' );
-            foreach( $relations['relation_list'] as $relation )
+            foreach ( $relations['relation_list'] as $relation )
             {
                 $object = eZContentObject::fetch( $relation['contentobject_id'] );
                 if( $object instanceof eZContentObject )
                 {
                     $dataMap = $object->attribute( 'data_map' );
-                    foreach( $dataMap as $attribute )
+                    foreach ( $dataMap as $attribute )
                     {
-                        if( $attribute->attribute( 'data_type_string' ) !== eZImageType::DATA_TYPE_STRING )
+                        if ( $attribute->attribute( 'data_type_string' ) !== eZImageType::DATA_TYPE_STRING )
                         {
                             continue;
                         }
 
                         $imageAliasHandler = $attribute->attribute( 'content' );
-                        $imageAlias        = $imageAliasHandler->imageAlias( 'opengraph' );
-                        if( $imageAlias['is_valid'] == 1 ) {
+                        $imageAlias = $imageAliasHandler->imageAlias( 'opengraph' );
+                        if( $imageAlias['is_valid'] == 1 )
+                        {
                             $images[] = 'http://' . $_SERVER['HTTP_HOST'] . '/' . $imageAlias['full_path'];
                         }
                     }
                 }
             }
+
             return $images;
         }
 

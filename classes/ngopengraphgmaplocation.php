@@ -9,13 +9,13 @@ class ngOpenGraphGmapLocation extends ngOpenGraphBase
 
     public function getData()
     {
-        $latitude = trim($this->ContentObjectAttribute->attribute( 'content' )->attribute('latitude'));
-        $longitude = trim($this->ContentObjectAttribute->attribute( 'content' )->attribute('longitude'));
+        $latitude = trim( $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'latitude' ) );
+        $longitude = trim( $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'longitude' ) );
         return $latitude . ',' . $longitude;
     }
 
     public function getDataMember( $dataMember )
     {
-        return trim($this->ContentObjectAttribute->attribute( 'content' )->attribute($dataMember));
+        return trim( $this->ContentObjectAttribute->attribute( 'content' )->attribute( $dataMember ) );
     }
 }
