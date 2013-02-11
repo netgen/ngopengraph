@@ -11,7 +11,7 @@ All configuration is done through one ini file (ngopengraph.ini),
 allowing for very simple and painless installation and flexible use.
 
 Installation instructions:
-	see doc/INSTALL
-	
+    see doc/INSTALL
+
 Version history:
-	see doc/HISTORY
+    see doc/HISTORY

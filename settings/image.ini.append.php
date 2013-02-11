@@ -7,5 +7,4 @@ AliasList[]=opengraph
 Reference=
 Filters[]
 Filters[]=geometry/scale=200;200
-
 */ ?>

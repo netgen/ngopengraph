@@ -2,5 +2,4 @@
 
 [TemplateSettings]
 ExtensionAutoloadPath[]=ngopengraph
-
 */ ?>
