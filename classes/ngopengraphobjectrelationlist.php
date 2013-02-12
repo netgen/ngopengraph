@@ -2,11 +2,6 @@
 
 class ngOpenGraphObjectRelationList extends ngOpenGraphBase
 {
-    function __construct( eZContentObjectAttribute $attribute )
-    {
-        parent::__construct( $attribute );
-    }
-
     /**
      * Returns data for the attribute
      *

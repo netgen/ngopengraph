@@ -3,16 +3,6 @@
 class ngOpenGraphImage extends ngOpenGraphBase
 {
     /**
-     * Constructor
-     *
-     * @param eZContentObjectAttribute $attribute
-     */
-    function __construct( eZContentObjectAttribute $attribute )
-    {
-        parent::__construct( $attribute );
-    }
-
-    /**
      * Returns data for the attribute
      *
      * @return string
