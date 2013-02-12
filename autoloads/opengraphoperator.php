@@ -2,23 +2,54 @@
 
 class OpenGraphOperator
 {
+    /**
+     * @var bool
+     */
     private $debug = false;
 
+    /**
+     * @var eZINI
+     */
+    private $ogIni;
+
+    /**
+     * @var bool
+     */
+    private $facebookCompatible = false;
+
+    /**
+     * Constructor
+     */
     function OpenGraphOperator()
     {
         $this->Operators = array( 'opengraph', 'language_code' );
     }
 
+    /**
+     * Returns configured operators
+     *
+     * @return array
+     */
     function &operatorList()
     {
         return $this->Operators;
     }
 
+    /**
+     * Returns if template operators support named parameters
+     *
+     * @return bool
+     */
     function namedParameterPerOperator()
     {
         return true;
     }
 
+    /**
+     * Returns definition of named parameters
+     *
+     * @return array
+     */
     function namedParameterList()
     {
         return array(
@@ -33,6 +64,17 @@ class OpenGraphOperator
         );
     }
 
+    /**
+     * Executes the operators
+     *
+     * @param eZTemplate $tpl
+     * @param string $operatorName
+     * @param array $operatorParameters
+     * @param string $rootNamespace
+     * @param string $currentNamespace
+     * @param mixed $operatorValue
+     * @param array $namedParameters
+     */
     function modify( &$tpl, &$operatorName, &$operatorParameters, &$rootNamespace,
                      &$currentNamespace, &$operatorValue, &$namedParameters )
     {
@@ -51,10 +93,15 @@ class OpenGraphOperator
        }
     }
 
+    /**
+     * Executes opengraph operator
+     *
+     * @param int|eZContentObjectTreeNode $nodeID
+     *
+     * @return array
+     */
     function generateOpenGraphTags( $nodeID )
     {
-        $returnArray = array();
-
         $this->ogIni = eZINI::instance( 'ngopengraph.ini' );
         $this->facebookCompatible = $this->ogIni->variable( 'General', 'FacebookCompatible' );
         $this->debug = $this->ogIni->variable( 'General', 'Debug' ) == 'enabled';
@@ -100,8 +147,17 @@ class OpenGraphOperator
         }
     }
 
+    /**
+     * Processes literal Open Graph metadata
+     *
+     * @param eZContentObjectTreeNode $contentNode
+     *
+     * @return array
+     */
     function processGenericData( $contentNode )
     {
+        $returnArray = array();
+
         $siteName = trim( eZINI::instance()->variable( 'SiteSettings', 'SiteName' ) );
         if ( !empty( $siteName ) )
         {
@@ -144,6 +200,14 @@ class OpenGraphOperator
         return $returnArray;
     }
 
+    /**
+     * Processes Open Graph metadata from object attributes
+     *
+     * @param eZContentObject $contentObject
+     * @param array $returnArray
+     *
+     * @return array
+     */
     function processObject( $contentObject, $returnArray )
     {
         if ( $this->ogIni->hasVariable( $contentObject->contentClassIdentifier(), 'LiteralMap' ) )
@@ -216,6 +280,13 @@ class OpenGraphOperator
         return $returnArray;
     }
 
+    /**
+     * Checks if all required Open Graph metadata are present
+     *
+     * @param array $returnArray
+     *
+     * @return bool
+     */
     function checkRequirements( $returnArray )
     {
         $arrayKeys = array_keys( $returnArray );
@@ -237,7 +308,7 @@ class OpenGraphOperator
             {
                 if ( $this->debug )
                 {
-                    eZDebug::writeError( $arrayKeys, 'Missing a FB required field (in ngopengraph.ini): app_id, DefaultAdmin, or Sitename (site.ini)' );
+                    eZDebug::writeError( $arrayKeys, 'Missing a FB required field (in ngopengraph.ini): app_id, DefaultAdmin, or site name (site.ini)' );
                 }
 
                 return false;

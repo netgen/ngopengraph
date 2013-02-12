@@ -2,11 +2,21 @@
 
 class ngOpenGraphObjectRelation extends ngOpenGraphBase
 {
+    /**
+     * Constructor
+     *
+     * @param eZContentObjectAttribute $attribute
+     */
     function __construct( eZContentObjectAttribute $attribute )
     {
         parent::__construct( $attribute );
     }
 
+    /**
+     * Returns data for the attribute
+     *
+     * @return string
+     */
     public function getData()
     {
         $relationObject = $this->ContentObjectAttribute->attribute( 'content' );
@@ -19,6 +29,13 @@ class ngOpenGraphObjectRelation extends ngOpenGraphBase
         return "";
     }
 
+    /**
+     * Returns part of the data for the attribute
+     *
+     * @param string $dataMember
+     *
+     * @return string
+     */
     public function getDataMember( $dataMember )
     {
         $relationObject = $this->ContentObjectAttribute->attribute( 'content' );
@@ -31,6 +48,7 @@ class ngOpenGraphObjectRelation extends ngOpenGraphBase
                 $dataMap = $relationObject->attribute( 'data_map' );
                 foreach ( $dataMap as $attribute )
                 {
+                    /** @var eZContentObjectAttribute $attribute */
                     if ( $attribute->attribute( 'data_type_string' ) !== eZImageType::DATA_TYPE_STRING )
                     {
                         continue;

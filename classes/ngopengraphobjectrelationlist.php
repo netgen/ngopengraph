@@ -7,6 +7,11 @@ class ngOpenGraphObjectRelationList extends ngOpenGraphBase
         parent::__construct( $attribute );
     }
 
+    /**
+     * Returns data for the attribute
+     *
+     * @return string
+     */
     public function getData()
     {
         $return = array();
@@ -23,6 +28,13 @@ class ngOpenGraphObjectRelationList extends ngOpenGraphBase
         return implode( ', ', $return );
     }
 
+    /**
+     * Returns part of the data for the attribute
+     *
+     * @param string $dataMember
+     *
+     * @return string
+     */
     public function getDataMember( $dataMember )
     {
         if( $dataMember === 'related_images' )
@@ -37,6 +49,7 @@ class ngOpenGraphObjectRelationList extends ngOpenGraphBase
                     $dataMap = $object->attribute( 'data_map' );
                     foreach ( $dataMap as $attribute )
                     {
+                        /** @var eZContentObjectAttribute $attribute */
                         if ( $attribute->attribute( 'data_type_string' ) !== eZImageType::DATA_TYPE_STRING )
                         {
                             continue;
