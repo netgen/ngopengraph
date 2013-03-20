@@ -1,3 +1,4 @@
+# Netgen Open Graph extension
 Netgen Open Graph is an extension for eZ Publish CMS that allows simple
 integration with Open Graph protocol, either official or compatible with Facebook.
 
