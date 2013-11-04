@@ -52,6 +52,11 @@ class ngOpenGraphObjectRelation extends ngOpenGraphBase
                     }
                 }
 
+                if ( empty( $images ) )
+                {
+                    $images[] = eZSys::serverURL() . eZURLOperator::eZImage( null, 'opengraph_default_image.png', '' );
+                }
+
                 return $images;
             }
         }
