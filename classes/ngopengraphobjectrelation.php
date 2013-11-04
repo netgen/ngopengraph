@@ -28,13 +28,13 @@ class ngOpenGraphObjectRelation extends ngOpenGraphBase
      */
     public function getDataMember( $dataMember )
     {
-        $relationObject = $this->ContentObjectAttribute->attribute( 'content' );
-
-        if ( $relationObject instanceof eZContentObject )
+        if ( $dataMember === 'related_images' )
         {
-            if ( $dataMember === 'related_images' )
+            $images  = array();
+
+            $relationObject = $this->ContentObjectAttribute->attribute( 'content' );
+            if ( $relationObject instanceof eZContentObject )
             {
-                $images  = array();
                 $dataMap = $relationObject->attribute( 'data_map' );
                 foreach ( $dataMap as $attribute )
                 {
@@ -51,14 +51,14 @@ class ngOpenGraphObjectRelation extends ngOpenGraphBase
                         $images[] = eZSys::serverURL() . '/' . $imageAlias['full_path'];
                     }
                 }
-
-                if ( empty( $images ) )
-                {
-                    $images[] = eZSys::serverURL() . eZURLOperator::eZImage( null, 'opengraph_default_image.png', '' );
-                }
-
-                return $images;
             }
+
+            if ( empty( $images ) )
+            {
+                $images[] = eZSys::serverURL() . eZURLOperator::eZImage( null, 'opengraph_default_image.png', '' );
+            }
+
+            return $images;
         }
 
         return "";
