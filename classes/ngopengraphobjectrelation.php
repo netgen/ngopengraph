@@ -44,11 +44,14 @@ class ngOpenGraphObjectRelation extends ngOpenGraphBase
                         continue;
                     }
 
-                    $imageAliasHandler = $attribute->attribute( 'content' );
-                    $imageAlias = $imageAliasHandler->imageAlias( 'opengraph' );
-                    if ( $imageAlias['is_valid'] == 1 )
+                    if ( $attribute->hasContent() )
                     {
-                        $images[] = eZSys::serverURL() . '/' . $imageAlias['full_path'];
+                        $imageAliasHandler = $attribute->attribute( 'content' );
+                        $imageAlias = $imageAliasHandler->imageAlias( 'opengraph' );
+                        if ( $imageAlias['is_valid'] == 1 )
+                        {
+                            $images[] = eZSys::serverURL() . '/' . $imageAlias['full_path'];
+                        }
                     }
                 }
             }
